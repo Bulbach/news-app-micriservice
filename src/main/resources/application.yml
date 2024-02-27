@@ -1,0 +1,35 @@
+spring:
+  profiles:
+    active: dev
+  config:
+    import: configserver:http://localhost:8888
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/myClevertecDB
+#    username: alex
+#    password: alex
+#    hikari:
+#      connection-timeout: 20000
+#      idle-timeout: 300000
+#      maximum-pool-size: 10
+#      minimum-idle: 5
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+#      show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        use_sql_comments: true
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#  liquibase:
+#    enabled: true
+#    change-log: classpath:changelog.yaml
+#  cache:
+#    algorithm: LRU
+#    max_size: 1000
+#  server:
+#    port: 8080
+
+#spring:

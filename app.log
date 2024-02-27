@@ -1,0 +1,3 @@
+18:56:10.696 [restartedMain] [31mWARN [0;39m [36morg.hibernate.orm.deprecation[0;39m - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) 
+18:56:12.271 [restartedMain] [31mWARN [0;39m [36mo.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration[0;39m - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning 
+18:56:13.200 [restartedMain] [31mWARN [0;39m [36mo.s.b.d.a.OptionalLiveReloadServer[0;39m - Unable to start LiveReload server 
