@@ -31,7 +31,7 @@
         </root>
     </springProfile>
 
-    <root level="WARN">
+    <root level="INFO">
         <springProfile name="dev">
             <appender-ref ref="roll-by-time"/>
             <appender-ref ref="STDOUT"/>

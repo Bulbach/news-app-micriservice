@@ -2,6 +2,7 @@ package by.alex.newsappmicriservice.controller;
 
 import by.alex.newsappmicriservice.dto.RequestNewsDto;
 import by.alex.newsappmicriservice.dto.ResponseNewsDto;
+import by.alex.newsappmicriservice.dto.ResponseNewsDtoWithComments;
 import by.alex.newsappmicriservice.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,5 +55,14 @@ public class NewsController {
                                                             @RequestParam(defaultValue = "10") int size) {
         List<ResponseNewsDto> newsList = (List<ResponseNewsDto>) newsService.findAll(page, size);
         return ResponseEntity.ok(newsList);
+
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<ResponseNewsDtoWithComments> getNewsByIdWithAllComments(@PathVariable Long id,
+                                                                                  @RequestParam(defaultValue = "0") int page,
+                                                                                  @RequestParam(defaultValue = "100") int size) {
+        ResponseNewsDtoWithComments newsWithComments = newsService.findNewsWithComments(id,page,size);
+        return ResponseEntity.ok(newsWithComments);
     }
 }
