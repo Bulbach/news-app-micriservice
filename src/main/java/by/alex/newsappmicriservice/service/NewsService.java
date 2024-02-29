@@ -5,7 +5,6 @@ import by.bulbach.exceptionspringbootstarter.exception.InvalidRequestException;
 import by.bulbach.exceptionspringbootstarter.exception.NewsNotFoundException;
 
 import java.util.Collection;
-import java.util.Optional;
 /**
  * Интерфейс для работы с новостями.
  *

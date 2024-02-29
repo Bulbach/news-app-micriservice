@@ -22,9 +22,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация сервиса для работы с новостями.
+ * Используется для выполнения операций над новостями, таких как получение, создание,
+ * обновление и удаление.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,6 +39,13 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
     @Qualifier("newsMapperImpl")
     private final NewsMapper mapper;
 
+    /**
+     * Получает список всех новостей с пагинацией.
+     *
+     * @param page Номер страницы.
+     * @param size Размер страницы.
+     * @return Список DTO новостей.
+     */
     @CustomCachableGet
     public List<ResponseNewsDto> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -45,6 +56,13 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
 
     }
 
+    /**
+     * Получает новость по идентификатору.
+     *
+     * @param id Идентификатор новости.
+     * @return DTO новости.
+     * @throws NewsNotFoundException если новость не найдена.
+     */
     @Override
     public ResponseNewsDto findById(Long id) {
         News news = repository.findById(id)
@@ -52,6 +70,13 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
         return mapper.toDto(news);
     }
 
+    /**
+     * Создает новую новость.
+     *
+     * @param news DTO запроса на создание новости.
+     * @return DTO созданной новости.
+     * @throws InvalidRequestException если запрос на создание новости null.
+     */
     @Override
     @CustomCachebleCreate
     public ResponseNewsDto create(RequestNewsDto news) {
@@ -65,6 +90,14 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
         return mapper.toDto(save);
     }
 
+    /**
+     * Обновляет новость.
+     *
+     * @param news DTO запроса на обновление новости.
+     * @return DTO обновленной новости.
+     * @throws InvalidRequestException если запрос на обновление новости null.
+     * @throws NewsNotFoundException если новость не найдена.
+     */
     @Override
     @CustomCachebleUpdate
     public ResponseNewsDto update(RequestNewsDto news) {
@@ -78,6 +111,13 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
         return mapper.toDto(repository.save(newsById));
     }
 
+    /**
+     * Удаляет новость по идентификатору.
+     *
+     * @param id Идентификатор новости.
+     * @throws RuntimeException если идентификатор равен 0.
+     * @throws NewsNotFoundException если новость не найдена.
+     */
     @Override
     @CustomCachebleDelete
     public void delete(Long id) {
@@ -90,6 +130,15 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
         repository.delete(newsById);
     }
 
+    /**
+     * Получает новость по идентификатору с комментариями.
+     *
+     * @param id   Идентификатор новости.
+     * @param page Номер страницы комментариев.
+     * @param size Размер страницы комментариев.
+     * @return DTO новости с комментариями.
+     * @throws NewsNotFoundException если новость не найдена.
+     */
     public ResponseNewsDtoWithComments findNewsWithComments(Long id, int page, int size) {
         ResponseNewsDtoWithComments withComments = new ResponseNewsDtoWithComments();
         News newsById = repository.findById(id)

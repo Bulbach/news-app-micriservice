@@ -26,7 +26,7 @@ public class LoggingAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * Pointcut that matches all repositories, services and Web REST endpoints.
+     * Pointcut который соответствует всем репозиториям, службам и конечным точкам Web REST..
      */
     @Pointcut("within(@org.springframework.stereotype.Repository *)" +
             " || within(@org.springframework.stereotype.Service *)" +
@@ -35,7 +35,7 @@ public class LoggingAspect {
     }
 
     /**
-     * Pointcut that matches all Spring beans in the application's main packages.
+     * Pointcut, который сопоставляет все Spring beans в основных пакетах приложения.
      */
     @Pointcut("within(by.alex..*)" +
             " || within(by.alex.newsappmicriservice.service..*)" +
@@ -44,7 +44,7 @@ public class LoggingAspect {
     }
 
     /**
-     * Advice that logs methods throwing exceptions.
+     * Совет, который регистрирует методы, выбрасывающие исключения.
      *
      * @param joinPoint join point for advice
      * @param e         exception
@@ -56,7 +56,7 @@ public class LoggingAspect {
     }
 
     /**
-     * Advice that logs when a method is entered and exited.
+     * Совет, который регистрирует вход и выход из метода.
      *
      * @param joinPoint join point for advice
      * @return result
@@ -83,14 +83,14 @@ public class LoggingAspect {
     }
 
     /**
-     * Pointcut that matches all Spring MVC controllers.
+     * Pointcut который соответствует всем контроллерам Spring MVC.
      */
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void controllerPointcut() {
     }
 
     /**
-     * Advice that logs incoming requests to controllers.
+     * Совет, который регистрирует входящие запросы к контроллерам.
      *
      * @param joinPoint join point for advice
      */

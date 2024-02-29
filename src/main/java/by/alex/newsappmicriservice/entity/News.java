@@ -9,6 +9,10 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * Класс, представляющий сущность новости в базе данных.
+ * Используется для сопоставления с таблицей "news" в базе данных.
+ */
 @Data
 @Entity(name = "news")
 public class News {

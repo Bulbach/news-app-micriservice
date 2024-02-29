@@ -20,6 +20,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -35,7 +36,7 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
+    implementation 'by.bulbach:exception-spring-boot-starter:0.0.1-SNAPSHOT'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.yaml:snakeyaml:2.2'
     runtimeOnly 'org.postgresql:postgresql'

@@ -19,37 +19,75 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Контроллер для обработки запросов, связанных с новостями.
+ */
 @RestController
 @RequestMapping("/news")
 @RequiredArgsConstructor
 public class NewsController {
 
+    /**
+     * Сервис для работы с новостями.
+     */
     private final NewsService<ResponseNewsDto, RequestNewsDto> newsService;
 
+    /**
+     * Получает новость по идентификатору.
+     *
+     * @param id Идентификатор новости.
+     * @return Ответ с новостью и статусом OK.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ResponseNewsDto> getNewsById(@PathVariable Long id) {
         ResponseNewsDto news = newsService.findById(id);
         return ResponseEntity.ok(news);
     }
 
+    /**
+     * Создает новую новость.
+     *
+     * @param news Данные для создания новости.
+     * @return Ответ с созданной новостью и статусом CREATED.
+     */
     @PostMapping
     public ResponseEntity<ResponseNewsDto> createNews(@RequestBody RequestNewsDto news) {
         ResponseNewsDto createdNews = newsService.create(news);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdNews);
     }
 
+    /**
+     * Обновляет новость по идентификатору.
+     *
+     * @param id   Идентификатор новости.
+     * @param news Данные для обновления новости.
+     * @return Ответ с обновленной новостью и статусом OK.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ResponseNewsDto> updateNews(@PathVariable Long id, @RequestBody RequestNewsDto news) {
         ResponseNewsDto updatedNews = newsService.update(news);
         return ResponseEntity.ok(updatedNews);
     }
 
+    /**
+     * Удаляет новость по идентификатору.
+     *
+     * @param id Идентификатор новости.
+     * @return Ответ без содержимого и статусом NO_CONTENT.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNews(@PathVariable Long id) {
         newsService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Получает список всех новостей с пагинацией.
+     *
+     * @param page Номер страницы.
+     * @param size Размер страницы.
+     * @return Ответ со списком новостей и статусом OK.
+     */
     @GetMapping
     public ResponseEntity<List<ResponseNewsDto>> getAllNews(@RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "10") int size) {
@@ -58,6 +96,14 @@ public class NewsController {
 
     }
 
+    /**
+     * Получает новость по идентификатору с комментариями.
+     *
+     * @param id   Идентификатор новости.
+     * @param page Номер страницы комментариев.
+     * @param size Размер страницы комментариев.
+     * @return Ответ с новостью и комментариями и статусом OK.
+     */
     @GetMapping("/{id}/comments")
     public ResponseEntity<ResponseNewsDtoWithComments> getNewsByIdWithAllComments(@PathVariable Long id,
                                                                                   @RequestParam(defaultValue = "0") int page,
