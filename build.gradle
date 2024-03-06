@@ -32,6 +32,10 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-config:4.1.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation group: 'org.hibernate.search', name: 'hibernate-search-mapper-orm-orm6', version: '6.2.3.Final'
+    implementation group: 'org.hibernate.search', name: 'hibernate-search-backend-lucene', version: '6.2.3.Final'
+
 
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

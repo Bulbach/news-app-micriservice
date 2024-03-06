@@ -3,6 +3,14 @@ spring:
     active: dev
   config:
     import: configserver:http://localhost:8888
+search:
+  field:
+    title: title
+    text: text
+  boost:
+    title: 2.0
+    text: 1.0
+
 #  datasource:
 #    driver-class-name: org.postgresql.Driver
 #    url: jdbc:postgresql://localhost:5432/myClevertecDB

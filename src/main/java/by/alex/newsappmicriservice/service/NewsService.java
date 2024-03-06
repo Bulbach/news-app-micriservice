@@ -5,6 +5,8 @@ import by.bulbach.exceptionspringbootstarter.exception.InvalidRequestException;
 import by.bulbach.exceptionspringbootstarter.exception.NewsNotFoundException;
 
 import java.util.Collection;
+import java.util.List;
+
 /**
  * Интерфейс для работы с новостями.
  *
@@ -60,11 +62,23 @@ public interface NewsService<T, K> {
     /**
      * Возвращает новость с комментариями на заданной странице с заданным размером.
      *
-     * @param id идентификатор новости
+     * @param id   идентификатор новости
      * @param page номер страницы
      * @param size размер страницы
      * @return новость с комментариями
      * @throws NewsNotFoundException если новость не найдена
      */
-    ResponseNewsDtoWithComments findNewsWithComments(Long id,int page,int size);
+    ResponseNewsDtoWithComments findNewsWithComments(Long id, int page, int size);
+
+    Collection<T> findReallyAll();
+
+    /**
+     * Получает список всех новостей используя расширенный поиск с пагинацией.
+     *
+     * @param search Фрагмент строки для поиска.
+     * @param page   Номер страницы.
+     * @param size   Размер страницы.
+     * @return Список DTO новостей.
+     */
+    List<T> search(String search, int page, int size);
 }

@@ -1,15 +1,20 @@
 package by.alex.newsappmicriservice.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 /**
  * Класс, представляющий DTO для новости с комментариями.
  * Используется для передачи данных о новости и ее комментариях между различными частями приложения.
  */
 @Data
+@Builder
+
 public class ResponseNewsDtoWithComments {
+
 
     /**
      * Идентификатор новости.

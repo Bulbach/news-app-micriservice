@@ -96,6 +96,13 @@ public class NewsController {
 
     }
 
+    @GetMapping("/news")
+    public ResponseEntity<List<ResponseNewsDto>> getAllNews() {
+        List<ResponseNewsDto> newsList = (List<ResponseNewsDto>) newsService.findReallyAll();
+        return ResponseEntity.ok(newsList);
+
+    }
+
     /**
      * Получает новость по идентификатору с комментариями.
      *
@@ -108,7 +115,24 @@ public class NewsController {
     public ResponseEntity<ResponseNewsDtoWithComments> getNewsByIdWithAllComments(@PathVariable Long id,
                                                                                   @RequestParam(defaultValue = "0") int page,
                                                                                   @RequestParam(defaultValue = "100") int size) {
-        ResponseNewsDtoWithComments newsWithComments = newsService.findNewsWithComments(id,page,size);
+        ResponseNewsDtoWithComments newsWithComments = newsService.findNewsWithComments(id, page, size);
         return ResponseEntity.ok(newsWithComments);
+    }
+
+    /**
+     * Обрабатывает GET-запрос для получения всех новостей используя расширенный поиск с пагинацией.
+     *
+     * @param search Фрагмент строки для поиска.
+     * @param page   Номер страницы.
+     * @param size   Размер страницы.
+     * @return Ответ с кодом статуса 200 и список DTO комментариев.
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<ResponseNewsDto>> fullSearch(@PathVariable String search,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "10") int size) {
+
+        List<ResponseNewsDto> comments = newsService.search(search, page, size);
+        return ResponseEntity.ok(comments);
     }
 }

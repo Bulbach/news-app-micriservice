@@ -26,7 +26,7 @@ public class LoggingAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * Pointcut который соответствует всем репозиториям, службам и конечным точкам Web REST..
+     * Pointcut который соответствует всем репозиториям, службам и конечным точкам Web REST.
      */
     @Pointcut("within(@org.springframework.stereotype.Repository *)" +
             " || within(@org.springframework.stereotype.Service *)" +

@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
  * Используется для сопоставления с таблицей "news" в базе данных.
  */
 @Data
+@Indexed
 @Entity(name = "news")
 public class News {
 
@@ -25,9 +28,11 @@ public class News {
     private LocalDateTime time;
 
     @Column(nullable = false)
+    @FullTextField(analyzer = "english")
     private String title;
 
     @Column(nullable = false, length = 1000)
+    @FullTextField(analyzer = "english")
     private String text;
 
 }

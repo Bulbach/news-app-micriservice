@@ -1,3 +1,16 @@
-18:56:10.696 [restartedMain] [31mWARN [0;39m [36morg.hibernate.orm.deprecation[0;39m - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) 
-18:56:12.271 [restartedMain] [31mWARN [0;39m [36mo.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration[0;39m - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning 
-18:56:13.200 [restartedMain] [31mWARN [0;39m [36mo.s.b.d.a.OptionalLiveReloadServer[0;39m - Unable to start LiveReload server 
+09:25:34.574 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - Incoming request to /news from IP: 0:0:0:0:0:0:0:1 
+09:25:34.576 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - Request method: GET 
+09:25:34.576 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - Request headers: 
+09:25:34.576 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - user-agent: PostmanRuntime/7.36.3 
+09:25:34.576 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - accept: */* 
+09:25:34.576 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - postman-token: a7d85716-f936-4c46-b106-832d3175deb5 
+09:25:34.577 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - host: localhost:8081 
+09:25:34.577 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - accept-encoding: gzip, deflate, br 
+09:25:34.577 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - connection: keep-alive 
+09:25:34.577 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - Request parameters: 
+09:25:34.578 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - search: [Text of News] 
+09:25:34.578 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - page: [0] 
+09:25:34.578 [http-nio-8081-exec-5] [34mINFO [0;39m [36mb.a.n.cache.aspect.LoggingAspect[0;39m - size: [10] 
+09:25:44.564 [SpringApplicationShutdownHook] [34mINFO [0;39m [36mo.s.o.j.LocalContainerEntityManagerFactoryBean[0;39m - Closing JPA EntityManagerFactory for persistence unit 'default' 
+09:25:44.653 [SpringApplicationShutdownHook] [34mINFO [0;39m [36mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown initiated... 
+09:25:44.870 [SpringApplicationShutdownHook] [34mINFO [0;39m [36mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown completed. 

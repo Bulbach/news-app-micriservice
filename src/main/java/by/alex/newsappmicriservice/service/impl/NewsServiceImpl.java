@@ -14,15 +14,24 @@ import by.alex.newsappmicriservice.repository.NewsRepository;
 import by.alex.newsappmicriservice.service.NewsService;
 import by.bulbach.exceptionspringbootstarter.exception.InvalidRequestException;
 import by.bulbach.exceptionspringbootstarter.exception.NewsNotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.engine.search.sort.dsl.SearchSortFactory;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Реализация сервиса для работы с новостями.
@@ -34,10 +43,36 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNewsDto> {
 
+
     private final NewsRepository repository;
-    private final APIClient commentClient;
+    private final EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private APIClient commentClient;
+    @Autowired
     @Qualifier("newsMapperImpl")
-    private final NewsMapper mapper;
+    private NewsMapper mapper;
+
+    @Value("${search.field.title}")
+    private String FIELD_TITLE;
+
+    @Value("${search.field.text}")
+    private String FIELD_TEXT;
+
+    @Value("${search.boost.title}")
+    private float TITLE_BOOST_FACTOR;
+
+    @Value("${search.boost.text}")
+    private float TEXT_BOOST_FACTOR;
+
+    public List<ResponseNewsDto> findReallyAll() {
+        Iterable<News> all = repository.findAll();
+        return StreamSupport
+                .stream(all.spliterator(), false)
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+
+
+    }
 
     /**
      * Получает список всех новостей с пагинацией.
@@ -46,9 +81,10 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
      * @param size Размер страницы.
      * @return Список DTO новостей.
      */
-    @CustomCachableGet
+
     public List<ResponseNewsDto> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
+
         return repository.findAll(pageable)
                 .stream()
                 .map(mapper::toDto)
@@ -64,6 +100,7 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
      * @throws NewsNotFoundException если новость не найдена.
      */
     @Override
+    @CustomCachableGet
     public ResponseNewsDto findById(Long id) {
         News news = repository.findById(id)
                 .orElseThrow(() -> new NewsNotFoundException("News with id= " + id + "not found"));
@@ -96,7 +133,7 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
      * @param news DTO запроса на обновление новости.
      * @return DTO обновленной новости.
      * @throws InvalidRequestException если запрос на обновление новости null.
-     * @throws NewsNotFoundException если новость не найдена.
+     * @throws NewsNotFoundException   если новость не найдена.
      */
     @Override
     @CustomCachebleUpdate
@@ -115,7 +152,7 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
      * Удаляет новость по идентификатору.
      *
      * @param id Идентификатор новости.
-     * @throws RuntimeException если идентификатор равен 0.
+     * @throws RuntimeException      если идентификатор равен 0.
      * @throws NewsNotFoundException если новость не найдена.
      */
     @Override
@@ -140,16 +177,49 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
      * @throws NewsNotFoundException если новость не найдена.
      */
     public ResponseNewsDtoWithComments findNewsWithComments(Long id, int page, int size) {
-        ResponseNewsDtoWithComments withComments = new ResponseNewsDtoWithComments();
+        ResponseNewsDtoWithComments withComments = ResponseNewsDtoWithComments.builder().build();
         News newsById = repository.findById(id)
                 .orElseThrow(() -> new NewsNotFoundException("news with id= " + id + " not found"));
         withComments.setId(newsById.getId());
         withComments.setTime(newsById.getTime());
         withComments.setText(newsById.getText());
         withComments.setTitle(newsById.getTitle());
-        List<CommentDto> commentsByNewsId = commentClient.getCommentsByNewsId(id,size,page);
+        List<CommentDto> commentsByNewsId = commentClient.getCommentsByNewsId(id, size, page);
         withComments.setCommentDto(commentsByNewsId);
 
         return withComments;
     }
+
+    /**
+     * Метод для получения всех новостей используя расширенный поиск с пагинацией.
+     *
+     * @param search Фрагмент строки для поиска.
+     * @param page   Номер страницы.
+     * @param size   Размер страницы.
+     * @return Возвращает коллекцию ResponseNewsDto.
+     */
+    @Override
+    public List<ResponseNewsDto> search(String search, int page, int size) {
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        SearchSession searchSession = Search.session(entityManager);
+
+        SearchResult<News> searchResult = searchSession.search(News.class)
+                .where(news -> news
+                        .bool()
+                        .with(b -> {
+                            b.must(news.matchAll());
+                            b.must(news.match()
+                                    .field(FIELD_TITLE)
+                                    .boost(TITLE_BOOST_FACTOR)
+                                    .field(FIELD_TEXT)
+                                    .boost(TEXT_BOOST_FACTOR)
+                                    .matching(search));
+                        }))
+                .sort(SearchSortFactory::score)
+                .fetch(page, size);
+
+        return searchResult.hits().stream().map(mapper::toDto).collect(Collectors.toList());
+    }
+
 }
