@@ -1,0 +1,65 @@
+version: '3'
+services:
+  cloud-config:
+    image: cloud-config
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/myClevertecDB
+      - SPRING_DATASOURCE_USERNAME=alex
+      - SPRING_DATASOURCE_PASSWORD=alex
+    networks:
+      - test
+    volumes:
+      - /path/to/local/resources:/config/
+
+  comment_service:
+    image: comment-service
+    restart: always
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+      - cloud-config
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/myClevertecDB
+      - SPRING_DATASOURCE_USERNAME=alex
+      - SPRING_DATASOURCE_PASSWORD=alex
+      - CONFIG_SERVER_URL=http://cloud_config_mic:8888
+    networks:
+      - test
+
+  news_service_main:
+    image: news_service_main
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+      - cloud-config
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/myClevertecDB
+      - SPRING_DATASOURCE_USERNAME=alex
+      - SPRING_DATASOURCE_PASSWORD=alex
+      - CONFIG_SERVER_URL=http://cloud_config_mic:8888
+    networks:
+      - test
+
+  db:
+    image: postgres:15.1-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=alex
+      - POSTGRES_PASSWORD=alex
+      - POSTGRES_DB=myClevertecDB
+      - config.support_escapes=true
+    networks:
+      - test
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
+networks:
+  test:

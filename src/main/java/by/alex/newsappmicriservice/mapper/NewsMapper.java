@@ -3,6 +3,7 @@ package by.alex.newsappmicriservice.mapper;
 import by.alex.newsappmicriservice.dto.RequestNewsDto;
 import by.alex.newsappmicriservice.dto.ResponseNewsDto;
 import by.alex.newsappmicriservice.entity.News;
+import by.alex.newsappmicriservice.service.NewsService;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.springframework.stereotype.Component;

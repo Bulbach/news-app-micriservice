@@ -1,5 +1,6 @@
 package by.alex.newsappmicriservice.controller;
 
+import by.alex.newsappmicriservice.dto.CommentDto;
 import by.alex.newsappmicriservice.dto.RequestNewsDto;
 import by.alex.newsappmicriservice.dto.ResponseNewsDto;
 import by.alex.newsappmicriservice.dto.ResponseNewsDtoWithComments;
@@ -96,13 +97,6 @@ public class NewsController {
 
     }
 
-    @GetMapping("/news")
-    public ResponseEntity<List<ResponseNewsDto>> getAllNews() {
-        List<ResponseNewsDto> newsList = (List<ResponseNewsDto>) newsService.findReallyAll();
-        return ResponseEntity.ok(newsList);
-
-    }
-
     /**
      * Получает новость по идентификатору с комментариями.
      *
@@ -118,6 +112,14 @@ public class NewsController {
         ResponseNewsDtoWithComments newsWithComments = newsService.findNewsWithComments(id, page, size);
         return ResponseEntity.ok(newsWithComments);
     }
+
+    @GetMapping("/{newsId}/comments/{commentId}")
+    public ResponseEntity<CommentDto> getCommentByNewsIdAndCommentId(@PathVariable("newsId") Long newsId,
+                                                                     @PathVariable("commentId") Long commentId) {
+        CommentDto commentDto = newsService.findNewsWithCommentById(newsId, commentId);
+        return ResponseEntity.ok(commentDto);
+    }
+
 
     /**
      * Обрабатывает GET-запрос для получения всех новостей используя расширенный поиск с пагинацией.

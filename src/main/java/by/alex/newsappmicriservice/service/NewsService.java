@@ -1,5 +1,6 @@
 package by.alex.newsappmicriservice.service;
 
+import by.alex.newsappmicriservice.dto.CommentDto;
 import by.alex.newsappmicriservice.dto.ResponseNewsDtoWithComments;
 import by.bulbach.exceptionspringbootstarter.exception.InvalidRequestException;
 import by.bulbach.exceptionspringbootstarter.exception.NewsNotFoundException;
@@ -70,7 +71,6 @@ public interface NewsService<T, K> {
      */
     ResponseNewsDtoWithComments findNewsWithComments(Long id, int page, int size);
 
-    Collection<T> findReallyAll();
 
     /**
      * Получает список всех новостей используя расширенный поиск с пагинацией.
@@ -81,4 +81,15 @@ public interface NewsService<T, K> {
      * @return Список DTO новостей.
      */
     List<T> search(String search, int page, int size);
+
+    /**
+     * Возвращает комментарий заданным идентификатором.
+     *
+     * @param newsId    идентификатор новости
+     * @param commentId номер комментария
+     * @return комментарий
+     * @throws NewsNotFoundException если новость не найдена
+     */
+    CommentDto findNewsWithCommentById(Long newsId, Long commentId);
+
 }

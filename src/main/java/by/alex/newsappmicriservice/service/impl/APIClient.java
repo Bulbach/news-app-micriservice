@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
 /**
  * Интерфейс для работы с Feign клиентом для взаимодействия с сервисом комментариев.
  * Аннотация {@link FeignClient} указывает, что этот интерфейс будет использоваться для создания Feign клиента.
@@ -24,4 +25,7 @@ public interface APIClient {
      */
     @GetMapping("/news/{newsId}")
     List<CommentDto> getCommentsByNewsId(@PathVariable("newsId") Long newsId, @RequestParam("size") int size, @RequestParam("page") int page);
+
+    @GetMapping("/news/{newsId}/comments/{commentId}")
+    CommentDto getCommentByNewsIdAndCommentId(@PathVariable("newsId") Long newsId, @PathVariable("commentId") Long commentId);
 }

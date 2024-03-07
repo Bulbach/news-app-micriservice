@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Реализация сервиса для работы с новостями.
@@ -43,14 +42,12 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNewsDto> {
 
-
     private final NewsRepository repository;
     private final EntityManagerFactory entityManagerFactory;
-    @Autowired
-    private APIClient commentClient;
-    @Autowired
-    @Qualifier("newsMapperImpl")
-    private NewsMapper mapper;
+
+    private final APIClient commentClient;
+
+    private final NewsMapper mapper;
 
     @Value("${search.field.title}")
     private String FIELD_TITLE;
@@ -64,15 +61,6 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
     @Value("${search.boost.text}")
     private float TEXT_BOOST_FACTOR;
 
-    public List<ResponseNewsDto> findReallyAll() {
-        Iterable<News> all = repository.findAll();
-        return StreamSupport
-                .stream(all.spliterator(), false)
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
-
-
-    }
 
     /**
      * Получает список всех новостей с пагинацией.
@@ -138,9 +126,11 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
     @Override
     @CustomCachebleUpdate
     public ResponseNewsDto update(RequestNewsDto news) {
+
         if (news == null) {
             throw new InvalidRequestException("If you want to create News can`t be null");
         }
+
         News newsById = repository.findById(news.id())
                 .orElseThrow(() -> new NewsNotFoundException("news with id= " + news.id() + " not found"));
         mapper.updateModel(news, newsById);
@@ -177,17 +167,35 @@ public class NewsServiceImpl implements NewsService<ResponseNewsDto, RequestNews
      * @throws NewsNotFoundException если новость не найдена.
      */
     public ResponseNewsDtoWithComments findNewsWithComments(Long id, int page, int size) {
+
         ResponseNewsDtoWithComments withComments = ResponseNewsDtoWithComments.builder().build();
+
         News newsById = repository.findById(id)
                 .orElseThrow(() -> new NewsNotFoundException("news with id= " + id + " not found"));
+
         withComments.setId(newsById.getId());
         withComments.setTime(newsById.getTime());
         withComments.setText(newsById.getText());
         withComments.setTitle(newsById.getTitle());
+
         List<CommentDto> commentsByNewsId = commentClient.getCommentsByNewsId(id, size, page);
+
         withComments.setCommentDto(commentsByNewsId);
 
         return withComments;
+    }
+
+    /**
+     * Получает комментарий по идентификатору связанный с определенной новостью.
+     *
+     * @param newsId    Идентификатор новости.
+     * @param commentId идентификатор комментария.
+     * @return CommentDto новости.
+     * @throws NewsNotFoundException если новость не найдена.
+     */
+    public CommentDto findNewsWithCommentById(Long newsId, Long commentId) {
+
+        return commentClient.getCommentByNewsIdAndCommentId(newsId, commentId);
     }
 
     /**
